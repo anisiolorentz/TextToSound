@@ -94,6 +94,29 @@ body.dark .text-input {
     box-shadow: 0 3px 13px rgba(198, 67, 67, 0.4);
 }
 
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.upload-file-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 17px;
+    background-color: black;
+    color: antiquewhite;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.4s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
 [type="submit"] {
     width: 110px;
     height: 35px;
@@ -106,7 +129,7 @@ body.dark .text-input {
     transition: transform 0.4s ease;
 }
 
-[type="submit"]:hover {
+[type="submit"]:hover, .upload-file-btn:hover {
     background: linear-gradient(45deg, rgb(198, 67, 67), rgb(220, 90, 90));
     box-shadow: 0 6px 20px rgba(198, 67, 67, 0.4);
     transform: scale(1.07);

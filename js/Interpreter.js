@@ -57,5 +57,9 @@ export class Interpreter {
         if (char === "a") {
             this.playNote("A4");
         }
+
+        if (char === "b") {
+            this.playNote("C4");
+        }
     }
 }

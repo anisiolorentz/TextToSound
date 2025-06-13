@@ -6,7 +6,7 @@ const fileInput = document.querySelector(".upload-file-input");
 
 fileInput.addEventListener("change", () => { // funcao que lê o arquivo txt entrado e coloca na textarea
     const file = fileInput.files[0];
-
+    
     if (!file) return;
 
     const reader = new FileReader();
@@ -26,5 +26,7 @@ submitButton.addEventListener('click', async(event) => {
         await Interpreter.loadInstrument("guitarra");
     }
 
-    Interpreter.playSound(textInput.value);
+    for (let i = 0; i < textInput.value.length; i++) {
+        Interpreter.playSound(textInput.value[i]);
+    }
 });

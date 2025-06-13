@@ -6,11 +6,14 @@ export class Interpreter {
     static audioContext;
     static currentNote;
     static currentOctave;
+    static playbackQueue = [];
+    static isPlaying = false;
+    static currentBPM = 40;
     // le o caractere e devolve: - o instrumento
     //                           - a nota
     //vai ter que guardar a oitava atual para poder saber como aumentar ou diminuir
     
-    static gmInstruments = {
+    static gmInstruments = { // trocar nomes para os numeros correspondentes do General MIDI
     'piano': 'acoustic_grand_piano',
     'guitarra': 'acoustic_guitar_nylon', 
     'violino': 'violin',
@@ -23,7 +26,7 @@ export class Interpreter {
     'clarinete': 'clarinet'
 };
 
-    static async loadInstrument(instrumentName) {
+    static async setInstrument(instrumentName) {
     if (!this.audioContext) {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
         await this.audioContext.resume(); // Necessário para alguns navegadores
@@ -41,9 +44,9 @@ export class Interpreter {
     }
 }
 
-    static playNote(note, duration = 0.5) {
+    static playNote(note, duration = 0.5, delay = 0) {
         if (this.currentInstrument) {
-            const when = this.audioContext.currentTime;
+            const when = this.audioContext.currentTime + delay;
             const gain = Volume.getGainValue(); // Converter dB para gain
             
             this.currentInstrument.play(note, when, { 
@@ -59,7 +62,49 @@ export class Interpreter {
         }
 
         if (char === "b") {
+            this.setInstrument("piano"); // atualmente o ultimo instrumento tocado é o que fica para começar a proxima reprodução
             this.playNote("C4");
         }
+
+        if (char === " ") {
+            return "REST";
+        }
+
+        return null;
+    }
+
+    static async playText(text) {
+        this.isPlaying = true;
+        const beatDuration = 60 / this.currentBPM;
+        let currentTime = 0;
+
+        for (let i = 0; i < text.length; i++) {
+            if (!this.isPlaying) {
+                break;
+            }
+
+            const note = this.playSound(text[i]);
+
+            if (note && note !== "REST") {
+                this.playNote(note, beatDuration * 0.8, currentTime);
+            }
+
+            currentTime += beatDuration;
+
+            await new Promise(resolve => setTimeout(resolve, beatDuration * 100));
+        }
+
+        this.isPlaying = false;
+        console.log("Reproduction finished");
+    }
+
+    static setBPM(bpm) {
+        this.currentBPM = bpm;
+        console.log(`BPM definido para: ${bpm}`);
+    }
+
+    static stopPlaying() {
+        this.isPlaying = false;
+        console.log("Reprodution stopped.");
     }
 }

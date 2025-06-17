@@ -16,8 +16,19 @@
             <span class="material-symbols-outlined">dark_mode</span>
         </button>
     </div>
-    <div class="volume">
-        <h3>Volume: - - - - - - - - - -</h6>
+    <div class="media-info-container">
+        <div class="bpm">
+            <h3>BPM:</h3>
+            <div class="bpm-value">
+                <h3>120</h3>
+            </div>
+        </div>
+        <div class="volume">
+            <h3>Volume:</h3>
+            <div class="volume-value">
+                <h3>50%</h3>
+            </div>
+        </div>
     </div>
     <div class="main-container">
         <h1 class="main-upper-text">Write your text!</h1>
@@ -32,6 +43,11 @@
             </div>
         </form>
         <div class="arrow">↓</div>
+        
+        <h3>imagem do instrumento atual (ou outra coisa)</h3>
+
+        <input type="button" id="save-btn" style="display: none;">
+        <label for="save-btn" class="save-file-btn">SAVE SONG</label>
     </div>
 
     <script src="https://unpkg.com/tone@next"></script>

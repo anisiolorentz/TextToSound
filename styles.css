@@ -57,11 +57,22 @@ body.dark .toggle-theme-btn {
     font-variation-settings: 'FILL' 1;
 }
 
-.volume {
+.media-info-container {
+    display: flex;
     position: fixed;
     top: 10px;
-    right: 50px;
+    right: 30px;
     z-index: 1000;
+    gap: 20px;
+}
+
+.bpm, .volume {
+    display: flex;
+    gap: 5px;
+}
+
+.bpm-value, .volume-value {
+    color: rgb(198, 67, 67);
 }
 
 .text-input {
@@ -101,7 +112,7 @@ body.dark .text-input {
     margin-top: 10px;
 }
 
-.upload-file-btn {
+.upload-file-btn, .save-file-btn {
     width: 35px;
     height: 35px;
     font-size: 17px;
@@ -117,6 +128,16 @@ body.dark .text-input {
     text-decoration: none;
 }
 
+.save-file-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 45.7%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+}
+
 [type="submit"] {
     width: 100px;
     height: 35px;
@@ -129,13 +150,13 @@ body.dark .text-input {
     transition: transform 0.4s ease;
 }
 
-[type="submit"]:hover, .upload-file-btn:hover {
+[type="submit"]:hover, .upload-file-btn:hover, .save-file-btn:hover {
     background: linear-gradient(45deg, rgb(198, 67, 67), rgb(220, 90, 90));
     box-shadow: 0 6px 20px rgba(198, 67, 67, 0.4);
     transform: scale(1.07);
 }
 
-[type="submit"]:active, .upload-file-btn:active {
+[type="submit"]:active, .upload-file-btn:active, .save-file-btn:active {
     transform: scale(0.98) translateY(2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     transition: all 0.1s ease;

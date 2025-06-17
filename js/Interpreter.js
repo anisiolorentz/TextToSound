@@ -122,7 +122,12 @@ export class Interpreter {
 
 
     static setBPM(bpm) {
+        if (bpm >= 240) {
+            this.currentBPM = 240;
+        }
+        
         this.currentBPM = bpm;
+
         console.log(`BPM definido para: ${bpm}`);
     }
 

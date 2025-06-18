@@ -1,11 +1,12 @@
 import { Volume } from "./Volume.js";
+import { Note } from "./Note.js";
 
 export class Interpreter {
 
     static currentInstrument;
     static audioContext;
-    static currentNote;
-    static currentOctave;
+    // static currentNote;
+    // static currentOctave;
     static playbackQueue = [];
     static isPlaying = false;
     static isPaused = false
@@ -65,7 +66,10 @@ export class Interpreter {
         for (let char of text) {
             if (char === "a") {
                 this.playbackQueue.push("guitarra");
-                this.playbackQueue.push("A4");
+                // this.playbackQueue.push("A4");
+                Note.setCurrentNote(Note.A);
+                const note = Note.getNote();
+                this.playbackQueue.push(note);
             }
             else if (char === "b") {
                 this.playbackQueue.push("piano");
@@ -109,6 +113,7 @@ export class Interpreter {
 
             else if (item !== "REST") {
                 this.playNote(item, beatDuration * 0.8);
+                // Volume.up();
             }
             
             document.querySelector(".bpm-value").innerHTML = this.currentBPM;

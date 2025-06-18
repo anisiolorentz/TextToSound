@@ -71,7 +71,7 @@ body.dark .toggle-theme-btn {
     gap: 5px;
 }
 
-.bpm-value, .volume-value {
+.bpm-value-div, .volume-value-div {
     color: rgb(198, 67, 67);
 }
 

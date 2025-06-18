@@ -21,10 +21,24 @@ fileInput.addEventListener("change", () => { // funcao que lê o arquivo txt ent
 
 submitButton.addEventListener('click', async(event) => {
     event.preventDefault(); //evita que a pagina recarregue (o que impedia o som de tocar)
+    if (Interpreter.isPlaying) {
+        const result = Interpreter.togglePlayback();
+
+        if (result === "paused") {
+            submitButton.value = "RESUME";
+        } else if (result === "resumed") {
+            submitButton.value = "PAUSE";
+        }
+        return;
+    }
 
     if (!Interpreter.currentInstrument) {
         await Interpreter.setInstrument("guitarra");
     }
 
-    Interpreter.playText(textInput.value);
+    submitButton.value = "PAUSE";
+
+    await Interpreter.playText(textInput.value);
+
+    submitButton.value = "PLAY";
 });

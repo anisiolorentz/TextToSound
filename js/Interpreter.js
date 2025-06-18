@@ -8,7 +8,9 @@ export class Interpreter {
     static currentOctave;
     static playbackQueue = [];
     static isPlaying = false;
-    static currentBPM = 60;
+    static isPaused = false
+    static currentQueueIndex = 0;
+    static currentBPM = 120;
     // le o caractere e devolve: - o instrumento
     //                           - a nota
     //vai ter que guardar a oitava atual para poder saber como aumentar ou diminuir
@@ -77,21 +79,29 @@ export class Interpreter {
     }
 
 
-    static async playQueue(text) {
+    static async playQueue() {
         if (this.playbackQueue.length === 0) {
             console.log("Fila vazia");
             return;
         }
 
         this.isPlaying = true;
+        this.isPaused = false;
         const beatDuration = 60 / this.currentBPM;
 
         console.log(`Tocando ${this.playbackQueue.length} notas:`, this.playbackQueue);
 
-        for (let item of this.playbackQueue) {
+        for (let i = this.currentQueueIndex; i < this.playbackQueue.length; i++) {
+            while (this.isPaused && this.isPlaying) {
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+            
             if (!this.isPlaying) {
                 break;
             }
+
+            const item = this.playbackQueue[i];
+            this.currentQueueIndex = i
 
             if (item.length > 2) {
                 await this.setInstrument(item);
@@ -101,11 +111,49 @@ export class Interpreter {
                 this.playNote(item, beatDuration * 0.8);
             }
             
+            document.querySelector(".bpm-value").innerHTML = this.currentBPM;
             await new Promise(resolve => setTimeout(resolve, beatDuration * 100));
         }
 
         this.isPlaying = false;
+        this.isPaused = false;
+        this.currentQueueIndex = 0;
         console.log("Reproduction finished");
+    }
+
+
+    static pausePlayback() {
+        if (this.isPlaying && !this.isPaused) {
+            this.isPaused = true;
+            console.log("Playback paused");
+            return "paused";
+        }
+
+        return "not_playing";
+    }
+
+
+    static resumePlayback() {
+        if (this.isPlaying && this.isPaused) {
+            this.isPaused = false;
+            console.log("Playback resumed");
+            return "resumed";
+        }
+
+        return "not_paused";
+    }
+
+
+    static togglePlayback() {
+        if (!this.isPlaying) {
+            return "not_playing";
+        }
+
+        if (this.isPaused) {
+            return this.resumePlayback();
+        } else {
+            return this.pausePlayback();
+        }
     }
 
 
@@ -125,7 +173,7 @@ export class Interpreter {
         if (bpm >= 240) {
             this.currentBPM = 240;
         }
-        
+
         this.currentBPM = bpm;
 
         console.log(`BPM definido para: ${bpm}`);
@@ -134,6 +182,8 @@ export class Interpreter {
 
     static stopPlaying() {
         this.isPlaying = false;
+        this.isPaused = false;
+        this.currentQueueIndex = 0;
         console.log("Reprodution stopped.");
     }
 }

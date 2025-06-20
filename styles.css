@@ -105,6 +105,10 @@ body.dark .text-input {
     box-shadow: 0 3px 13px rgba(198, 67, 67, 0.4);
 }
 
+.note-display {
+    font-size: 50px;
+}
+
 .buttons-container {
     display: flex;
     justify-content: center;
@@ -159,7 +163,7 @@ body.dark .text-input {
 [type="submit"]:active, .upload-file-btn:active, .save-file-btn:active {
     transform: scale(0.98) translateY(2px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    transition: all 0.1s ease;
+    transition: all 0.08s ease;
 }
 
 .arrow {

@@ -89,7 +89,7 @@ export class Interpreter {
     static playNote(note, duration = 0.5, delay = 0) {
         if (this.currentInstrument) {
             const when = this.audioContext.currentTime + delay;
-            const gain = Volume.getGainValue(); // Converter dB para gain
+            const gain = Volume.getCurrentVolume(); 
             
             this.currentInstrument.play(note, when, { 
                 duration: duration,
@@ -224,6 +224,7 @@ export class Interpreter {
             }
 
             const item = this.playbackQueue[i];
+            document.querySelector(".note-display").innerHTML = item;
 
             if (item === 'vol-default') {
                 Volume.default();
@@ -273,6 +274,7 @@ export class Interpreter {
         if (this.isPlaying && !this.isPaused) {
             this.isPaused = true;
             console.log("Playback paused");
+            document.querySelector(".note-display").innerHTML = "Paused"
             return "paused";
         }
 
@@ -310,6 +312,8 @@ export class Interpreter {
 
 
     static async playText(text) { // metodo principal
+        Volume.updateVolumeDisplay();
+        
         if (!this.currentInstrument) {
             await this.setInstrument("guitarra");
         }
@@ -318,6 +322,7 @@ export class Interpreter {
         await this.playQueue();
         this.clearQueue();
 
+        document.querySelector(".note-display").innerHTML = ""
         await this.setInstrument("guitarra"); // reseta para o instrumento padrao para uma proxima execucao (da pra mudar)
     }
 

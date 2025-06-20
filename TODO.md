@@ -1,8 +1,6 @@
 # mapear codigo MIDI para instrumentos Soundfont
 
-# fazer o valor de currentVolume aparecer na página (atualmente, o valor é só de exemplo)
-
-# fazer imagem do instrumento atual aparecer / outra coisa (a letra do momento, talvez)
+# arrumar o display das notas (aumentar e fazer bpm e volume aparecerem)
 
 # fazer o usuario poder salvar o arquivo final como .MIDI
 

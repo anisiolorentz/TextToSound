@@ -2,6 +2,8 @@
 
 # arrumar o display das notas (aumentar e fazer bpm e volume aparecerem)
 
+# colocar algum efeito de "batida" a cada nota (até pra diferenciar quando a mesma nota repete, pq o note-display fica parado)
+
 # fazer o usuario poder salvar o arquivo final como .MIDI
 
 # colocar um botão HELP (tutorial) do lado do dark-theme

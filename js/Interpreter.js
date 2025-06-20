@@ -1,21 +1,17 @@
 import { Volume } from "./Volume.js";
-import { Note } from "./Note.js";
 
 export class Interpreter {
 
-    static currentInstrument;
     static audioContext;
-    // static currentNote;
-    // static currentOctave;
+    static currentInstrument;
+    static currentNote;
+    static currentOctave = 4;
     static playbackQueue = [];
     static isPlaying = false;
     static isPaused = false
-    static currentQueueIndex = 0;
     static currentBPM = 120;
-    // le o caractere e devolve: - o instrumento
-    //                           - a nota
-    //vai ter que guardar a oitava atual para poder saber como aumentar ou diminuir
     
+
     static gmInstruments = { // trocar nomes para os numeros correspondentes do General MIDI
     'piano': 'acoustic_grand_piano',
     'guitarra': 'acoustic_guitar_nylon', 
@@ -26,10 +22,51 @@ export class Interpreter {
     'bateria': 'synth_drum',
     'orgao': 'church_organ',
     'saxofone': 'alto_sax',
-    'clarinete': 'clarinet'
+    'clarinete': 'clarinet',
+    '125': 'telephone_ring',
     };
 
 
+    static charMapping = {
+        'a': { type: 'note', value: 'A' },
+        'A': { type: 'note', value: 'A' },
+        'b': { type: 'note', value: 'B' },
+        'B': { type: 'note', value: 'B' },
+        'c': { type: 'note', value: 'C' },
+        'C': { type: 'note', value: 'C' },
+        'd': { type: 'note', value: 'D' },
+        'D': { type: 'note', value: 'D' },
+        'e': { type: 'note', value: 'E' },
+        'E': { type: 'note', value: 'E' },
+        'f': { type: 'note', value: 'F' },
+        'F': { type: 'note', value: 'F' },
+        'g': { type: 'note', value: 'G' },
+        'G': { type: 'note', value: 'G' },
+        ' ': { type: 'rest' },
+
+        'i': { type: 'check' },
+        'I': { type: 'check' },
+        'o': { type: 'check' },
+        'O': { type: 'check' },
+        'u': { type: 'check' },
+        'U': { type: 'check' },
+
+        '+': { type: 'volume', value: 'double' },
+        '-': { type: 'volume', value: 'default' },
+
+        'R+': { type: 'octave', value: 'up' },
+        'R-': { type: 'octave', value: 'down' },
+
+        '?': { type: 'note', value: 'random' },
+
+        '\n': { type: 'instrument', value: 'piano' },
+
+        'BPM+': { type: 'bpm', value: 'increase' },
+        'BPM-': { type: 'bpm', value: 'decrease' },
+        ';': { type: 'bpm', value: 'random' },
+    };
+
+    
     static async setInstrument(instrumentName) {
         if (!this.audioContext) {
             this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -63,20 +100,100 @@ export class Interpreter {
 
 
     static buildQueue(text) {
-        for (let char of text) {
-            if (char === "a") {
-                this.playbackQueue.push("guitarra");
-                // this.playbackQueue.push("A4");
-                Note.setCurrentNote(Note.A);
-                const note = Note.getNote();
-                this.playbackQueue.push(note);
+        this.currentOctave = 4; // inicia sempre com a oitava default 
+        this.currentBPM = 120;
+
+        for (let i = 0; i < text.length; i++) {
+            let char = text[i];
+
+            if (text[i] === "R") { // avalia se vai ser R+ ou R-
+                if (text[i + 1] === "+") {
+                    char = "R+";
+                    i++;
+                }
+                else if (text[i + 1] === "-") {
+                    char = "R-";
+                    i++;
+                }
             }
-            else if (char === "b") {
-                this.playbackQueue.push("piano");
-                this.playbackQueue.push("C4");
+
+            if (text[i] === "B") {
+                if (text [i + 1] === "P" && text[i + 2] === "M") {
+                    if (text[i + 3] === "+") {
+                        char = "BPM+";
+                        i += 3;
+                    }
+                    else {
+                        char = "BPM-";
+                        i += 3;
+                    }
+                }
             }
-            else if (char === " ") {
-                this.playbackQueue.push("REST");
+            let command = this.charMapping[char];
+
+            if (!command) {
+                console.log("Char nao reconhecido");
+                continue;
+            }
+
+            switch (command.type) {
+                case 'instrument':
+                    this.playbackQueue.push(command.value);
+                    break;
+
+                case 'note':
+                    if (command.value === "random") {
+                        const notes = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+                        this.currentNote = notes[Math.floor(Math.random() * 7)] + this.currentOctave;
+                    } else {
+                        this.currentNote = command.value + this.currentOctave; // se a nota nao é aleatoria (caso mais comum)
+                    }
+                    this.playbackQueue.push(this.currentNote);
+                    break;
+
+                case 'check':
+                    if (i > 0) {
+                        command = this.charMapping[text[i - 1]];
+                        if (command && command.type === 'note') {
+                            this.playbackQueue.push(this.currentNote);
+                        } else {
+                            this.playbackQueue.push('125'); // nao entendi se é pra tocar uma vez o som ou trocar o instrumento
+                        }
+                    }
+                    break;
+
+                case 'octave':
+                    if (command.value === "up") {
+                        if (this.currentOctave < 7) {
+                            this.currentOctave++;
+                        }
+                    } else if (this.currentOctave > 0) {
+                        this.currentOctave--;
+                    }
+                    break;
+
+                case 'volume':
+                    if (command.value === "default") {
+                        this.playbackQueue.push("vol-default");
+                    } else {
+                        this.playbackQueue.push("vol-double");
+                    }
+                    break;
+
+                case 'bpm':
+                    if (command.value === "increase") {
+                        this.playbackQueue.push("bpm-up");
+                    } 
+                    else if (command.value === "decrease") {
+                        this.playbackQueue.push("bpm-down");
+                    } else {
+                        this.playbackQueue.push("bpm-random");
+                    }
+                    break;
+
+                case 'rest':
+                    this.playbackQueue.push("REST");
+                    break;
             }
         }
         return this.playbackQueue;
@@ -91,11 +208,13 @@ export class Interpreter {
 
         this.isPlaying = true;
         this.isPaused = false;
-        const beatDuration = 60 / this.currentBPM;
+        Volume.default();
 
         console.log(`Tocando ${this.playbackQueue.length} notas:`, this.playbackQueue);
 
-        for (let i = this.currentQueueIndex; i < this.playbackQueue.length; i++) {
+        for (let i = 0; i < this.playbackQueue.length; i++) {
+            const beatDuration = 60 / this.currentBPM;
+            
             while (this.isPaused && this.isPlaying) {
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
@@ -105,24 +224,47 @@ export class Interpreter {
             }
 
             const item = this.playbackQueue[i];
-            this.currentQueueIndex = i
 
-            if (item.length > 2) {
-                await this.setInstrument(item);
+            if (item === 'vol-default') {
+                Volume.default();
+                continue;
             }
 
-            else if (item !== "REST") {
+            if (item === 'vol-double') {
+                Volume.double();
+                continue;
+            }
+
+            if (item === 'bpm-up') {
+                this.setBPM(this.currentBPM + 60); // enunciado manda +80, mas pra mim +60 faz mais sentido
+                continue;
+            }
+
+            if (item === 'bpm-down') {
+                this.setBPM(this.currentBPM - 60);
+                continue;
+            }
+
+            if (item === 'bpm-random') {
+                this.setBPM(Math.floor(Math.random() * 240));
+                continue;
+            }
+
+            if (item.length > 4) { // se tem mais que 4 letras, é instrumento (PENSAR NUMA MANEIRA MELHOR PRA ISSO)
+                await this.setInstrument(item);
+                continue;
+            }
+
+            if (item !== "REST") {
                 this.playNote(item, beatDuration * 0.8);
-                // Volume.up();
             }
             
             document.querySelector(".bpm-value").innerHTML = this.currentBPM;
-            await new Promise(resolve => setTimeout(resolve, beatDuration * 100));
+            await new Promise(resolve => setTimeout(resolve, beatDuration * 1000));
         }
 
         this.isPlaying = false;
         this.isPaused = false;
-        this.currentQueueIndex = 0;
         console.log("Reproduction finished");
     }
 
@@ -168,27 +310,25 @@ export class Interpreter {
 
 
     static async playText(text) { // metodo principal
+        if (!this.currentInstrument) {
+            await this.setInstrument("guitarra");
+        }
+
         this.buildQueue(text);
         await this.playQueue();
         this.clearQueue();
+
+        await this.setInstrument("guitarra"); // reseta para o instrumento padrao para uma proxima execucao (da pra mudar)
     }
 
 
     static setBPM(bpm) {
         if (bpm >= 240) {
             this.currentBPM = 240;
+        } else {
+            this.currentBPM = bpm;
         }
 
-        this.currentBPM = bpm;
-
-        console.log(`BPM definido para: ${bpm}`);
-    }
-
-
-    static stopPlaying() {
-        this.isPlaying = false;
-        this.isPaused = false;
-        this.currentQueueIndex = 0;
-        console.log("Reprodution stopped.");
+        console.log(`BPM definido para: ${this.currentBPM}`);
     }
 }

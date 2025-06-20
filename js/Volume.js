@@ -60,6 +60,10 @@ export class Volume {
         console.log(`Volume dobrado para: ${this.currentVolume}dB`);
     }
 
+    static default() {
+        this.currentVolume = 0;
+    }
+    
     // Converter dB para gain (0-1) para Soundfont
     static getGainValue() {
         // Converter dB para linear (0-1)

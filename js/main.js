@@ -21,6 +21,13 @@ fileInput.addEventListener("change", () => { // funcao que lê o arquivo txt ent
 
 submitButton.addEventListener('click', async(event) => {
     event.preventDefault(); //evita que a pagina recarregue (o que impedia o som de tocar)
+    
+    const text = textInput.value.trim();
+
+    if (!text) {
+        return;
+    }
+
     if (Interpreter.isPlaying) {
         const result = Interpreter.togglePlayback();
 
@@ -32,13 +39,9 @@ submitButton.addEventListener('click', async(event) => {
         return;
     }
 
-    if (!Interpreter.currentInstrument) {
-        await Interpreter.setInstrument("guitarra");
-    }
-
     submitButton.value = "PAUSE";
 
-    await Interpreter.playText(textInput.value);
+    await Interpreter.playText(text);
 
     submitButton.value = "PLAY";
 });

@@ -258,6 +258,13 @@ export class Interpreter {
 
             if (item !== "REST") {
                 this.playNote(item, beatDuration * 0.8);
+
+                const noteDisplay = document.querySelector(".note-display");
+                noteDisplay.classList.add('pulse');
+
+                setTimeout(() => {
+                    noteDisplay.classList.remove('pulse');
+                }, 300);
             }
             
             document.querySelector(".bpm-value").innerHTML = this.currentBPM;
@@ -313,7 +320,7 @@ export class Interpreter {
 
     static async playText(text) { // metodo principal
         Volume.updateVolumeDisplay();
-        
+
         if (!this.currentInstrument) {
             await this.setInstrument("guitarra");
         }

@@ -1,8 +1,10 @@
 import { Interpreter } from "./Interpreter.js";
+import { MidiExporter } from "./MidiExporter.js";
 
 const textInput = document.querySelector(".text-input");
 const submitButton = document.querySelector('[type="submit"]');
 const fileInput = document.querySelector(".upload-file-input");
+const saveFile = document.querySelector(".save-file-btn");
 
 fileInput.addEventListener("change", () => { // funcao que lê o arquivo txt entrado e coloca na textarea
     const file = fileInput.files[0];
@@ -45,3 +47,25 @@ submitButton.addEventListener('click', async(event) => {
 
     submitButton.value = "PLAY";
 });
+
+saveFile.addEventListener('click', () => {
+    const text = textInput.value.trim();
+    
+    if (!text) {
+        alert('You need to type something!');
+        return;
+    }
+    
+    if (typeof MidiWriter === 'undefined') {
+        alert('Biblioteca MIDI não carregada. Recarregue a página.');
+        return;
+    }
+
+    // Gerar fila sem tocar
+    Interpreter.buildQueue(text);
+    
+    // Exportar para MIDI
+    console.log('Download');
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
+    MidiExporter.downloadMidi(Interpreter.playbackQueue, `music-${timestamp}.mid`);
+})

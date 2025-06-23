@@ -1,12 +1,12 @@
 # mapear codigo MIDI para instrumentos Soundfont
 
-# arrumar o display das notas (aumentar e fazer bpm e volume aparecerem)
+# colocar seletor de musicas pre selecionadas (apenas "colam" o texto na textarea)
 
-# colocar algum efeito de "batida" a cada nota (até pra diferenciar quando a mesma nota repete, pq o note-display fica parado)
-
-# fazer o usuario poder salvar o arquivo final como .MIDI
+# colocar display de bpm, volume e paused abaixo do note-display
 
 # colocar um botão HELP (tutorial) do lado do dark-theme
+
+# colocar feedback de arquivo salvo
 
 # arrumar botao save song (não ta fixo na pagina, por ex, quando abre o inspetor)
 

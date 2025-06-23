@@ -193,3 +193,18 @@ body.dark .text-input {
     text-align: center;
     margin-top: 20px;
 }
+
+.bottom-alert-display {
+    position: fixed;
+    font-size: 15px;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    justify-content: center;
+    color: rgb(198, 67, 67);
+}
+
+.bottom-alert-display.saved {
+    color: black;
+}

@@ -62,6 +62,15 @@ export class MidiExporter {
             document.body.removeChild(a);
             
             console.log('MIDI baixado com sucesso:', filename);
+            
+            const savedAlert = document.querySelector(".bottom-alert-display");
+            savedAlert.className = "bottom-alert-display saved";
+            savedAlert.innerHTML = "File was successfully saved!";
+            setTimeout(() => {
+                savedAlert.innerHTML = "";
+                savedAlert.className = "bottom-alert-display";
+            }, 3500);
+
         } catch (error) {
             console.error('Erro ao criar MIDI:', error);
             alert('Erro ao gerar arquivo MIDI: ' + error.message);

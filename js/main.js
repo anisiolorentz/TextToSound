@@ -52,7 +52,10 @@ saveFile.addEventListener('click', () => {
     const text = textInput.value.trim();
     
     if (!text) {
-        alert('You need to type something!');
+        document.querySelector(".bottom-alert-display").innerHTML = "You need to type something";
+        setTimeout(() => {
+        document.querySelector(".bottom-alert-display").innerHTML = "";
+        }, 2000);
         return;
     }
     

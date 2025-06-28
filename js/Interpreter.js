@@ -14,16 +14,12 @@ export class Interpreter {
 
     static gmInstruments = { // trocar nomes para os numeros correspondentes do General MIDI
     'piano': 'acoustic_grand_piano',
-    'guitarra': 'acoustic_guitar_nylon', 
-    'violino': 'violin',
-    'flauta': 'flute',
-    'trompete': 'trumpet',
-    'baixo': 'acoustic_bass',
-    'bateria': 'synth_drum',
-    'orgao': 'church_organ',
+    'guitar': 'acoustic_guitar_nylon', 
+    'bass': 'acoustic_bass',
+    'drum': 'synth_drum',
+    'organ': 'church_organ',
     'saxofone': 'alto_sax',
-    'clarinete': 'clarinet',
-    '125': 'telephone_ring',
+    'ring': 'telephone_ring',
     };
 
 
@@ -73,7 +69,7 @@ export class Interpreter {
             await this.audioContext.resume(); // Necessário para alguns navegadores
         }
         
-        const gmName = this.gmInstruments[instrumentName] || 'flute';
+        const gmName = this.gmInstruments[instrumentName] || instrumentName || 'flute';
         
         try {
             this.currentInstrument = await Soundfont.instrument(this.audioContext, gmName);
@@ -157,7 +153,7 @@ export class Interpreter {
                         if (command && command.type === 'note') {
                             this.playbackQueue.push(this.currentNote);
                         } else {
-                            this.playbackQueue.push('125'); // nao entendi se é pra tocar uma vez o som ou trocar o instrumento
+                            this.playbackQueue.push('RING'); // nao entendi se é pra tocar uma vez o som ou trocar o instrumento
                         }
                     }
                     break;
@@ -192,7 +188,7 @@ export class Interpreter {
                     break;
 
                 case 'rest':
-                    this.playbackQueue.push("REST");
+                    this.playbackQueue.push(" ");
                     break;
             }
         }
@@ -251,12 +247,20 @@ export class Interpreter {
                 continue;
             }
 
+            if (item === 'RING') {
+                const previousInstrument = this.currentInstrument.name;
+                await this.setInstrument('ring');
+                this.playNote(this.currentNote, beatDuration * 0.8);
+                await this.setInstrument(previousInstrument);
+                continue;
+            }
+
             if (item.length > 4) { // se tem mais que 4 letras, é instrumento (PENSAR NUMA MANEIRA MELHOR PRA ISSO)
                 await this.setInstrument(item);
                 continue;
             }
 
-            if (item !== "REST") {
+            if (item !== " ") {
                 this.playNote(item, beatDuration * 0.8);
 
                 const noteDisplay = document.querySelector(".note-display");
@@ -322,7 +326,7 @@ export class Interpreter {
         Volume.updateVolumeDisplay();
 
         if (!this.currentInstrument) {
-            await this.setInstrument("guitarra");
+            await this.setInstrument("guitar");
         }
 
         this.buildQueue(text);
@@ -330,7 +334,7 @@ export class Interpreter {
         this.clearQueue();
 
         document.querySelector(".note-display").innerHTML = ""
-        await this.setInstrument("guitarra"); // reseta para o instrumento padrao para uma proxima execucao (da pra mudar)
+        await this.setInstrument("guitar"); // reseta para o instrumento padrao para uma proxima execucao (da pra mudar)
     }
 
 

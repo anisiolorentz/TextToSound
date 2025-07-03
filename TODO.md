@@ -6,9 +6,9 @@
 
 # colocar um botão HELP (tutorial) do lado do dark-theme
 
-# colocar feedback de arquivo salvo
-
 # arrumar botao save song (não ta fixo na pagina, por ex, quando abre o inspetor)
+
+# colocar opcao de mudar idioma (EN/PT) com a opcao atual sublinhada ou com cor mais forte
 
 # adequar melhor para os criterios de orientacao a objetos (modularidade, encapsulamento etc)
 

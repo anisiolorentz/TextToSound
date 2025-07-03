@@ -5,6 +5,9 @@ const textInput = document.querySelector(".text-input");
 const submitButton = document.querySelector('[type="submit"]');
 const fileInput = document.querySelector(".upload-file-input");
 const saveFile = document.querySelector(".save-file-btn");
+const tutorialButton = document.querySelector(".tutorial-btn");
+const tutorialModal = document.querySelector(".tutorial-modal");
+const closeTutorialButton = document.querySelector(".close-tutorial-btn");
 
 fileInput.addEventListener("change", () => { // funcao que lê o arquivo txt entrado e coloca na textarea
     const file = fileInput.files[0];
@@ -71,4 +74,34 @@ saveFile.addEventListener('click', () => {
     console.log('Download');
     const timestamp = new Date().toISOString().slice(0, 19).replace(/[:.]/g, '-');
     MidiExporter.downloadMidi(Interpreter.playbackQueue, `music-${timestamp}.mid`);
-})
+});
+
+// abre modal do tutorial
+tutorialButton.addEventListener('click', (event) => {
+    event.preventDefault();
+
+    tutorialModal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+});
+
+// fecha tutorial ao clicar no botao X
+closeTutorialButton.addEventListener('click', () => {
+    tutorialModal.classList.remove('show');
+    document.body.style.overflow = 'auto';
+});
+
+// fecha tutorial ao clicar fora do modal
+tutorialModal.addEventListener('click', (e) => {
+    if (e.target === tutorialModal) {
+        tutorialModal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+});
+
+// fecha clicando ESC
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && tutorialModal.classList.contains('show')) {
+        tutorialModal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+    }
+});

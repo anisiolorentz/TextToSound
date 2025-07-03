@@ -28,10 +28,35 @@ body.dark {
     margin-top: 50px;
 }
 
-.toggle-theme {
+.left-buttons-container {
+    display: flex;
     position: fixed;
     top: 27px;
     left: 30px;
+}
+
+.tutorial-btn {
+    font-size: 19px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    position: fixed;
+    top: 25.8px;
+    left: 75px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: transform 0.25s ease;
+}
+
+.tutorial-btn:hover {
+    transform: scale(1.06);
+}
+
+body.dark .tutorial-btn {
+    color: antiquewhite;
 }
 
 .toggle-theme-btn {
@@ -41,6 +66,7 @@ body.dark {
     padding: 0;
     margin: 0;
     font-size: 24px;
+    font-variation-settings: 'wght' 500;
     transition: transform 0.25s ease;
 }
 
@@ -207,4 +233,112 @@ body.dark .text-input {
 
 .bottom-alert-display.saved {
     color: black;
+}
+
+.tutorial-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* ← Overlay escuro */
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.tutorial-modal.show {
+    display: flex;
+}
+
+.tutorial-content {
+    background-color: white;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px; /* ← Controla tamanho máximo */
+    max-height: 80%; /* ← Altura máxima */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: modalSlideIn 0.2s ease-out;
+}
+
+/* Adaptação para temas */
+body.light .tutorial-content {
+    background-color: antiquewhite;
+    color: black;
+}
+
+body.dark .tutorial-content {
+    background-color: rgb(18, 26, 61);
+    color: antiquewhite;
+    border: 2px solid rgb(198, 67, 67);
+}
+
+.tutorial-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 2px solid rgb(198, 67, 67);
+}
+
+.tutorial-header h2 {
+    margin: 0;
+    color: rgb(198, 67, 67);
+    font-size: 24px;
+}
+
+.close-tutorial-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: rgb(198, 67, 67);
+    font-weight: bold;
+    padding: 0;
+    line-height: 1;
+}
+
+.close-tutorial-btn:hover {
+    transform: scale(1.2);
+    transition: transform 0.2s ease;
+}
+
+.tutorial-body {
+    padding: 20px;
+    text-align: left;
+    max-height: 400px;
+    overflow-y: auto; /* ← Scroll se necessário */
+}
+
+.tutorial-body h3 {
+    color: rgb(198, 67, 67);
+    margin-top: 0;
+}
+
+.tutorial-body ul {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.tutorial-body li {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.tutorial-body strong {
+    color: rgb(198, 67, 67);
+}
+
+/* animação de entrada */
+@keyframes modalSlideIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }

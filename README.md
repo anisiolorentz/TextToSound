@@ -14,12 +14,11 @@ TextToSound é uma aplicação web que converte texto em música, transformando 
 
 ## Screenshots
 
-<!-- Adicione suas capturas de tela aqui -->
-![Interface Principal](images/img1.heic)
-![Tela de tutorial](images/img2.heic)
-![Entrada de texto](images/img3.heic)
-![Reprodução](images/img4.heic)
-![Modo Escuro](images/img5.heic)
+![Interface Principal](images/img1.png)
+![Tela de tutorial](images/img2.png)
+![Entrada de texto](images/img3.png)
+![Reprodução](images/img4.png)
+![Modo Escuro](images/img5.png)
 
 ## Como Usar
 
